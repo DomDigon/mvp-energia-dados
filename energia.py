@@ -64,8 +64,13 @@ df_categorias = (
 auditoria = pd.merge(df_total, df_categorias, on=['sigla_uf', 'ano' , 'mes'])
 auditoria['diferença'] = auditoria['total_oficial'] - auditoria['soma_categorias']
 
-erros = auditoria[auditoria['diferença'].abs() > 2]
+erros = auditoria[auditoria['diferença'].abs() > 3] #abs retorna numero absoluto caso caso haja algum erro de digitação ou arredontamento no dataset. Em teoria, o consumo total, não deve ser menor que a soma das categorias. Usei '>3' pq  constatei que a soma do consumo das categorias e/ou do Total muda por conta de arrendondamento de casas decimais:
+#veja abaixo as colunas total_oficial e soma_categorias e a constatação que as variações vão de 0 a 3 MWh em todo o dataset.
 
+#print(auditoria[['soma_categorias','total_oficial']]) 
+#print(auditoria['diferença'].value_counts())
+
+#Outra forma de ver o problema:
 #print(f"Total de meses/estados auditados: {len(auditoria)}")
 #print(f"Total de inconsistências reais encontradas: {len(erros)}")
 
@@ -114,6 +119,6 @@ df_limpo['numero_consumidores'] = df_limpo['numero_consumidores'].astype('Int32'
 df_limpo['ano'] = df_limpo['ano'].astype('Int16')
 df_limpo['mes'] = df_limpo['mes'].astype('Int8')
 
-#df original 1.8 MB. df_limpo 710.2 KB
+#df original: 1.8 MB. df_limpo: 710.2 KB
 #df_limpo.info()
 
